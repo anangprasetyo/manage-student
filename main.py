@@ -3,10 +3,12 @@ from datetime import datetime
 
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///students.db'
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 class Student(db.Model):
     nisn = db.Column(db.String(10), primary_key=True, nullable=False)
@@ -72,18 +74,6 @@ def delete_student(nisn):
         return redirect(url_for('index'))
     except:
         return 'There was a problem deleting that student'
-
-
-@app.cli.command("init-db")
-def init_db_command():
-    with app.app_context():
-        try:
-            db.drop_all()
-            print("Dropped all tables.")
-        except Exception as e:
-            print(f"Error dropping tables: {e}")
-        db.create_all()
-        print("Initialized the database and created all tables.")
 
 if __name__ == "__main__":
     app.run(port=int(os.environ.get('PORT', 8080)), debug=True)
