@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<div class="layout-content-container flex flex-col max-w-7xl flex-1 gap-6">
+    <div class="flex flex-wrap justify-between items-center gap-4">
+      <p class="text-gray-800 dark:text-white text-4xl font-black leading-tight tracking-[-0.033em]">Daftar Siswa</p>
+    </div>
+    <div class="flex items-center gap-2">
+      <button class="flex max-w-xs cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-primary text-white gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-4 hover:bg-primary/90 transition-colors">
+        <span class="material-symbols-outlined" style="font-size: 20px;">add</span>
+        <a href="{{ url_for('add_student') }}" class="truncate">Tambah Siswa Baru</a>
+      </button>
+    </div>
+    <div class="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50">
+      <table class="w-full text-left">
+          <thead>
+            <tr class="bg-gray-50 dark:bg-gray-800">
+                <th class="px-6 py-4 text-sm font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">Nama</th>
+                <th class="px-6 py-4 text-sm font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">NISN</th>
+                <th class="px-6 py-4 text-sm font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">Kelas</th>
+                <th class="px-6 py-4 text-sm font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider">Nilai</th>
+                <th class="px-6 py-4 text-sm font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider text-right">Aksi</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+            {% for student in students %}
+              <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">{{ student.nama }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{{ student.nisn }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">Kelas {{ student.kelas }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 {% if student.nilai and student.nilai < 65 %}text-red-500{% elif student.nilai and student.nilai < 75 %}text-yellow-500{% elif student.nilai and student.nilai <= 100 %} text-green-500 {% else %} text-gray-500 {% endif %}">{{ student.nilai }}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-right">
+                  <div class="flex justify-end items-center gap-4">
+                      <button class="text-gray-500 hover:text-yellow-500 dark:text-gray-400 dark:hover:text-yellow-400 transition-colors" title="Edit Data">
+                        <a href="{{ url_for('update_student', nisn=student.nisn) }}" class="material-symbols-outlined">edit</a>
+                      </button>
+                      <button class="text-gray-500 hover:text-red-500 dark:text-gray-400 dark:hover:text-red-500 transition-colors" title="Hapus Siswa">
+                        <a href="{{ url_for('delete_student', nisn=student.nisn) }}" onclick="return confirm('Anda yakin ingin menghapus data ini?')" class="material-symbols-outlined">delete</a>
+                      </button>
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+      </table>
+    </div>
+</div>
+{% endblock %}
